@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import jakarta.transaction.Transactional;
 import med.voll.api.doctors.Doctor;
 import med.voll.api.doctors.DoctorRegisterData;
 import med.voll.api.doctors.DoctorRepository;
@@ -18,6 +19,7 @@ public class DoctorController {
     private DoctorRepository repository;
 
     @PostMapping
+    @Transactional
     public void register(@RequestBody DoctorRegisterData data) {
 
         repository.save(new Doctor(data));
