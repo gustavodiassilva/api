@@ -3,6 +3,9 @@ package med.voll.api.controller;
 import jakarta.validation.Valid;
 import med.voll.api.doctors.ListDoctors;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.transaction.Transactional;
@@ -28,8 +31,8 @@ public class DoctorController {
     }
 
     @GetMapping
-    public List<ListDoctors> ListDoctors(){
-        return repository.findAll().stream().map(ListDoctors::new).toList();
+    public Page<ListDoctors> ListDoctors(@PageableDefault(size = 10, sort = {"name"}) Pageable pagination){
+        return repository.findAll(pagination).map(ListDoctors::new);
     }
 
 }
