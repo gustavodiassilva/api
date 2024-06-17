@@ -8,21 +8,24 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import med.voll.api.address.Address;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.function.Consumer;
+
 @Table(name = "doctors")
-@Entity(name= "Doctor")
+@Entity(name = "Doctor")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = "id")
 public class Doctor {
 
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String email;
@@ -36,11 +39,31 @@ public class Doctor {
 
 
     public Doctor(DoctorRegisterData data) {
-    this.name = data.name();
-    this.crm = data.crm();
-    this.email = data.email();
-    this.telefone = data.telefone();
-    this.address = new Address(data.address());
-    this.especialidade = data.especialidade();
-  }
+        this.name = data.name();
+        this.crm = data.crm();
+        this.email = data.email();
+        this.telefone = data.telefone();
+        this.address = new Address(data.address());
+        this.especialidade = data.especialidade();
+    }
+
+    public void updateData(UpdateDataDoctor data) {
+        Map<String, Consumer<String>> setters = new HashMap<>();
+        setters.put(data.name(), this::setName);
+        setters.put(data.email(), this::setEmail);
+        setters.put(data.telefone(), this::setTelefone);
+
+        if(data.endereco() != null) {
+            this.address.updateData(data.endereco());
+        }
+
+        setters.forEach((value, setter) -> {
+            if (value != null) {
+                setter.accept(value);
+            }
+        });
+
+
+
+    }
 }
