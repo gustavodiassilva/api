@@ -37,6 +37,8 @@ public class Doctor {
     @Embedded
     private Address address;
 
+    private Boolean status;
+
 
     public Doctor(DoctorRegisterData data) {
         this.name = data.name();
@@ -45,6 +47,7 @@ public class Doctor {
         this.telefone = data.telefone();
         this.address = new Address(data.address());
         this.especialidade = data.especialidade();
+        this.status = true;
     }
 
     public void updateData(UpdateDataDoctor data) {
@@ -62,8 +65,11 @@ public class Doctor {
                 setter.accept(value);
             }
         });
+    }
 
-
-
+    public void DeleteDoctor(Long id){
+        if(id != null){
+            this.status = false;
+        }
     }
 }
